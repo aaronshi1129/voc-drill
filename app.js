@@ -33,6 +33,12 @@ function startWordBank(bankName) {
     
     document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
     document.getElementById('practice').classList.add('active');
+    
+    // Mark this as a regular session (not retry)
+    document.getElementById('practice').setAttribute('data-retry', 'false');
+    
+    // Reset progress bar at the start
+    document.getElementById('progress').style.width = '0%';
 
     // Show "Ready?" avatar and message
     document.getElementById('avatar').src = "https://alittlemoreenglish.weebly.com/uploads/2/6/6/3/26638990/4_orig.png";
@@ -55,7 +61,22 @@ function showNextWord() {
         customBanks[currentWordBank.replace('custom_', '')] :
         wordBanks[currentWordBank];
     
-    document.getElementById('word').textContent = `Question ${11-currentWords.length}/10: ${currentWord}`;
+    // Check if this is a retry session (practicing missed words)
+    const isRetrySession = document.getElementById('practice').getAttribute('data-retry') === 'true';
+    
+    // For regular practice, show question count, for retry don't show count
+    if (!isRetrySession) {
+        const questionNumber = 11 - currentWords.length;
+        document.getElementById('word').textContent = `Question ${questionNumber}/10: ${currentWord}`;
+        document.getElementById('progress-bar').style.display = 'block';
+        
+        // Update progress bar for regular practice
+        const progressPercentage = ((questionNumber - 1) / 10) * 100;
+        document.getElementById('progress').style.width = `${progressPercentage}%`;
+    } else {
+        document.getElementById('word').textContent = `${currentWord}`;
+        document.getElementById('progress-bar').style.display = 'none';
+    }
     
     const optionsContainer = document.getElementById('options');
     optionsContainer.innerHTML = '';
@@ -78,7 +99,6 @@ function showNextWord() {
 
     document.getElementById('explanation').classList.add('hidden');
     document.getElementById('next-word-btn').classList.add('hidden');
-    updateProgress();
 }
 
 function checkAnswer(selected, correct, explanation) {
@@ -105,6 +125,13 @@ function checkAnswer(selected, correct, explanation) {
     document.getElementById('explanation').classList.remove('hidden');
     document.getElementById('next-word-btn').classList.remove('hidden');
     
+    // Update progress bar after answering
+    if (document.getElementById('practice').getAttribute('data-retry') !== 'true') {
+        const questionNumber = 11 - currentWords.length;
+        const progressPercentage = (questionNumber / 10) * 100;
+        document.getElementById('progress').style.width = `${progressPercentage}%`;
+    }
+    
     currentWords.shift();
 }
 
@@ -124,6 +151,9 @@ function showResults() {
     
     document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
     document.getElementById('results').classList.add('active');
+    
+    // Set the avatar for the results page
+    document.getElementById('avatar').src = "https://alittlemoreenglish.weebly.com/uploads/2/6/6/3/26638990/5_orig.png";
     
     const scoreDisplay = document.getElementById('score-display');
     scoreDisplay.innerHTML = `
@@ -150,6 +180,10 @@ function retryMissedWords() {
     
     document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
     document.getElementById('practice').classList.add('active');
+    
+    // Mark this as a retry session
+    document.getElementById('practice').setAttribute('data-retry', 'true');
+    
     showNextWord();
 }
 
@@ -243,9 +277,9 @@ function confirmBackToMenu() {
     }
 }
 
-function updateProgress(isCustomBank = false) {
-    const total = 10; 
-    const completed = 10 - currentWords.length;
+function updateProgress() {
+    const total = missedWords.length > 0 ? missedWords.length : 10;
+    const completed = total - currentWords.length;
     const progress = (completed / total) * 100;
     document.getElementById('progress').style.width = `${progress}%`;
 }
