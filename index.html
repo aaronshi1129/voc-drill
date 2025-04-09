@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Drill</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="avatar-container">
+            <img id="avatar" src="https://alittlemoreenglish.weebly.com/uploads/2/6/6/3/26638990/1_orig.png" width="200" height="200" alt="Avatar">
+            <div id="avatar-message"></div>
+        </div>
+
+        <div id="main-menu" class="screen active">
+            <h1>Vocabulary Drill</h1>
+            <div class="stats">
+                <div>Total Points: <span id="total-points">0</span></div>
+                <div>Words Mastered: <span id="words-mastered">0</span></div>
+            </div>
+            <div class="badge-container" id="badges"></div>
+            <button onclick="startWordBank('basic')">Basic Words</button>
+            <button onclick="startWordBank('intermediate')">Intermediate Words</button>
+            <button onclick="startWordBank('advanced')">Advanced Words</button>
+            <div id="custom-banks-container"></div>
+            <button onclick="showCustomBank()">Create New Custom Bank</button>
+        </div>
+
+        <div id="custom-bank" class="screen">
+            <h2>Create Custom Word Bank</h2>
+            <div id="custom-bank-form">
+                <input type="text" id="custom-bank-name" placeholder="Enter bank name">
+                <div class="hint">Enter at least 10 words with definitions</div>
+                <textarea id="custom-words" placeholder="Enter words and definitions in format: word:definition (one per line)"></textarea>
+            </div>
+            <button onclick="saveCustomBank()">Save Custom Bank</button>
+            <button onclick="showMainMenu()">Back</button>
+        </div>
+
+        <div id="practice" class="screen">
+            <div id="question-container">
+                <h2 id="word"></h2>
+                <div id="options"></div>
+            </div>
+            <div id="explanation" class="hidden"></div>
+            <div id="progress-bar">
+                <div id="progress"></div>
+            </div>
+            <button id="next-word-btn" class="next-button hidden" onclick="showNextWord()">Next Word →</button>
+            <button id="back-to-menu-btn" class="back-button" onclick="confirmBackToMenu()">Back to Menu</button>
+        </div>
+
+        <div id="results" class="screen">
+            <h2>Practice Complete!</h2>
+            <div id="score-display"></div>
+            <div id="needs-practice"></div>
+            <button onclick="showMainMenu()">Back to Menu</button>
+            <button onclick="retryMissedWords()">Practice Missed Words</button>
+        </div>
+    </div>
+    <footer class="site-footer">
+        <a href="https://sites.google.com/view/aaronshi" target="_blank">
+            <img src="https://alittlemoreenglish.weebly.com/uploads/2/6/6/3/26638990/favicon-32x32_orig.png" alt="Site Icon" class="footer-icon">
+        </a>
+        <span>Released in April 2025. Created by Aaron Shi.</span>
+    </footer>
+    <script src="wordbanks.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
