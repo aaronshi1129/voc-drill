@@ -386,4 +386,4 @@ button:hover::after {
 #custom-banks-container button {
     position: relative;
     padding-right: 40px; /* Make room for the delete icon */
-    text-align: left;
+    text-align: center;
