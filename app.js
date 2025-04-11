@@ -248,11 +248,48 @@ function updateCustomBanksDisplay() {
     
     container.innerHTML = '';
     Object.keys(banks).forEach(bankName => {
+        // Create a container for each bank with button and delete icon
+        const bankContainer = document.createElement('div');
+        bankContainer.className = 'custom-bank-item';
+        
+        // Create the button to start the word bank
         const button = document.createElement('button');
         button.textContent = bankName;
         button.onclick = () => startWordBank('custom_' + bankName);
-        container.appendChild(button);
+        
+        // Create delete icon
+        const deleteIcon = document.createElement('span');
+        deleteIcon.className = 'delete-icon';
+        deleteIcon.innerHTML = '❌';
+        deleteIcon.onclick = (e) => {
+            e.stopPropagation(); // Prevent triggering the bank start
+            deleteCustomBank(bankName);
+        };
+        
+        // Add tooltip for delete icon
+        deleteIcon.title = 'Delete this bank';
+        
+        // Append elements to container
+        button.appendChild(deleteIcon);
+        bankContainer.appendChild(button);
+        container.appendChild(bankContainer);
     });
+}
+
+function deleteCustomBank(bankName) {
+    if (confirm(`Are you sure you want to delete the bank "${bankName}"?`)) {
+        // Get current banks
+        const banks = JSON.parse(localStorage.getItem('customBanks') || '{}');
+        
+        // Delete the specified bank
+        delete banks[bankName];
+        
+        // Save updated banks to localStorage
+        localStorage.setItem('customBanks', JSON.stringify(banks));
+        
+        // Update the display
+        updateCustomBanksDisplay();
+    }
 }
 
 function updateStats() {
